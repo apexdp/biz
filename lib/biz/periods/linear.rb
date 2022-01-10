@@ -29,7 +29,7 @@ module Biz
 
             yielder << begin
               sequences
-                .filter(&:any?)
+                .select(&:any?)
                 .public_send(selector) { |sequence| sequence.peek.date }
                 .next
             end

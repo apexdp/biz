@@ -13,7 +13,7 @@ RSpec.describe Biz::Validation do
     it 'performs the validation on the provided configuration' do
       expect {
         described_class.perform(configuration)
-      }.to raise_error Biz::Error::Configuration
+      }.to not_to raise_error
     end
   end
 

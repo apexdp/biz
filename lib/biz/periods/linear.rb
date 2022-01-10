@@ -35,9 +35,7 @@ module Biz
             end
           end
 
-          if periods.any?
-            loop do yielder << periods.next end
-          end
+          loop do yielder << periods.next end if periods.any?
         end
       end
 

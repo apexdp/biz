@@ -9,22 +9,22 @@ Time calculations using business hours.
 
 ## Features
 
-- Support for:
+* Support for:
   - Multiple intervals per day.
   - Multiple schedule configurations.
   - Intervals spanning the entire day.
   - Holidays.
   - Breaks (time-segment holidays).
   - Shifts (date-based intervals).
-- Second-level calculation precision.
-- Seamless Daylight Saving Time handling.
-- Schedule intersection.
-- Thread safety.
+* Second-level calculation precision.
+* Seamless Daylight Saving Time handling.
+* Schedule intersection.
+* Thread safety.
 
 ## Anti-Features
 
-- No dependency on ActiveSupport.
-- No monkey patching by default.
+* No dependency on ActiveSupport.
+* No monkey patching by default.
 
 ## Installation
 
@@ -336,8 +336,8 @@ To open a console with the gem and sample schedule loaded:
 
 ## Alternatives
 
-- [`business_time`](https://github.com/bokmann/business_time)
-- [`working_hours`](https://github.com/Intrepidd/working_hours)
+* [`business_time`](https://github.com/bokmann/business_time)
+* [`working_hours`](https://github.com/Intrepidd/working_hours)
 
 ## Copyright and license
 

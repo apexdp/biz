@@ -247,19 +247,18 @@ RSpec.describe Biz::Schedule do
         Date.new(2021, 9, 16)  => {'09:00' => '12:00', '13:00' => '17:00'},
         # wednesday
         Date.new(2021, 9, 22)  => {'10:00' => '14:00'},
-        # monday
-        Date.new(2022, 1, 10)  => {'10:00' => '12:00'},
         # alternate fridays
         Date.new(2021, 12, 3)  => {'10:00' => '14:00'},
         Date.new(2021, 12, 17) => {'10:00' => '14:00'},
         Date.new(2021, 12, 31) => {'10:00' => '14:00'},
-        Date.new(2022, 1, 7)   => {'10:00' => '14:00'}
+        Date.new(2022, 1, 7)   => {'10:00' => '14:00'},
+        # monday
+        Date.new(2022, 1, 10)  => {'10:00' => '12:00'}
       }
     }
     let(:breaks) {
       {
-        Date.new(2006, 1, 2) => {'10:00' => '11:30'},
-        Date.new(2006, 1, 3) => {'14:15' => '14:30', '15:40' => '15:50'}
+        Date.new(2021, 9, 16) => {'12:00' => '13:00'}
       }
     }
     let(:holidays) {
@@ -314,6 +313,107 @@ RSpec.describe Biz::Schedule do
             Time.utc(2022, 1, 7, 14)
           )
         )
+      end
+    end
+
+    describe '#dates' do
+      # TODO: Needs to be fixed
+      xit 'returns dates for the schedule' do
+        expect(schedule.dates.after(Date.new(2021, 12, 1)).take(3).to_a).to eq [
+          Date.new(2021, 12, 3),
+          Date.new(2021, 12, 17),
+          Date.new(2022, 1, 7)
+        ]
+      end
+    end
+
+    describe '#time' do
+      it 'returns the time after an amount of elapsed business time' do
+        expect(schedule.time(30, :minutes).after(
+                 Time.utc(2021, 12, 3, 10)
+               )).to eq(
+                 Time.utc(2021, 12, 3, 10, 30)
+               )
+      end
+    end
+
+    describe '#within' do
+      it 'returns the amount of elapsed business time between two times' do
+        expect(
+          schedule.within(Time.utc(2021, 12, 3, 12), Time.utc(2021, 12, 3, 15))
+        ).to eq Biz::Duration.hours(2)
+      end
+    end
+
+    describe '#in_hours?' do
+      context 'when the time is not in business hours' do
+        let(:time) { Time.utc(2021, 12, 3, 8) }
+
+        it 'returns false' do
+          expect(schedule.in_hours?(time)).to eq false
+        end
+      end
+
+      context 'when the time is in business hours' do
+        let(:time) { Time.utc(2021, 12, 3, 12) }
+
+        it 'returns true' do
+          expect(schedule.in_hours?(time)).to eq true
+        end
+      end
+    end
+
+    describe '#business_hours?' do
+      context 'when the time is not in business hours' do
+        let(:time) { Time.utc(2021, 12, 3, 8) }
+
+        it 'returns false' do
+          expect(schedule.business_hours?(time)).to eq false
+        end
+      end
+
+      context 'when the time is in business hours' do
+        let(:time) { Time.utc(2021, 12, 3, 12) }
+
+        it 'returns true' do
+          expect(schedule.business_hours?(time)).to eq true
+        end
+      end
+    end
+
+    describe '#on_break?' do
+      context 'when the time is during a break' do
+        let(:time) { Time.utc(2021, 9, 16, 12) }
+
+        it 'returns true' do
+          expect(schedule.on_break?(time)).to eq true
+        end
+      end
+
+      context 'when the time is not during a break' do
+        let(:time) { Time.utc(2021, 9, 16, 11, 59) }
+
+        it 'returns false' do
+          expect(schedule.on_break?(time)).to eq false
+        end
+      end
+    end
+
+    describe '#on_holiday?' do
+      context 'when the time is during a holiday' do
+        let(:time) { Time.utc(2021, 12, 31, 12) }
+
+        it 'returns true' do
+          expect(schedule.on_holiday?(time)).to eq true
+        end
+      end
+
+      context 'when the time is not during a holiday' do
+        let(:time) { Time.utc(2021, 9, 22, 12) }
+
+        it 'returns false' do
+          expect(schedule.on_holiday?(time)).to eq false
+        end
       end
     end
   end

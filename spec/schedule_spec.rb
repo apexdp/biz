@@ -299,8 +299,8 @@ RSpec.describe Biz::Schedule do
           schedule.periods.after(Time.utc(2021, 9, 23)).first
         ).to eq(
           Biz::TimeSegment.new(
-            Time.utc(2022, 1, 10, 10),
-            Time.utc(2022, 1, 10, 12)
+            Time.utc(2021, 12, 3, 10),
+            Time.utc(2021, 12, 3, 14)
           )
         )
       end

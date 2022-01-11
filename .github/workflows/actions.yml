@@ -27,14 +27,14 @@ jobs:
         uses: zendesk/cache@v2
         with:
           path: vendor/bundle
-          key: cache-${{ runner.os }}-ruby-${{ matrix.rvm }}-${{ hashFiles('Gemfile.lock') }}
+          key: cache1-${{ runner.os }}-ruby-${{ matrix.rvm }}-${{ hashFiles('Gemfile.lock') }}
       - name: install
         run: |
           bundle config path vendor/bundle
           bundle install --without benchmark development
-          # curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          # chmod +x ./cc-test-reporter
-          # ./cc-test-reporter before-build
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
       - name: rake ${{ matrix.rvm }}
         run: |
           bundle exec rake

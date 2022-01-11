@@ -18,13 +18,13 @@ jobs:
           - 2.4
           - 2.5
     steps:
-      - uses: zendesk/checkout@v2
-      - uses: zendesk/setup-ruby@v1
+      - uses: apexdp/checkout@v2
+      - uses: apexdp/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.rvm }}
       - name: gem_cache
         id: cache
-        uses: zendesk/cache@v2
+        uses: apexdp/cache@v2
         with:
           path: vendor/bundle
           key: cache-${{ runner.os }}-ruby-${{ matrix.rvm }}-${{ hashFiles('Gemfile.lock') }}

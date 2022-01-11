@@ -236,4 +236,85 @@ RSpec.describe Biz::Schedule do
       end
     end
   end
+
+  context 'irregular schedules' do
+    let(:hours) {
+      {}
+    }
+    let(:shifts) {
+      {
+        # thursday
+        Date.new(2021, 9, 16)  => {'09:00' => '12:00', '13:00' => '17:00'},
+        # wednesday
+        Date.new(2021, 9, 22)  => {'10:00' => '14:00'},
+        # monday
+        Date.new(2022, 1, 10)  => {'10:00' => '12:00'},
+        # alternate fridays
+        Date.new(2021, 12, 3)  => {'10:00' => '14:00'},
+        Date.new(2021, 12, 17) => {'10:00' => '14:00'},
+        Date.new(2021, 12, 31) => {'10:00' => '14:00'},
+        Date.new(2022, 1, 7)   => {'10:00' => '14:00'}
+      }
+    }
+    let(:breaks) {
+      {
+        Date.new(2006, 1, 2) => {'10:00' => '11:30'},
+        Date.new(2006, 1, 3) => {'14:15' => '14:30', '15:40' => '15:50'}
+      }
+    }
+    let(:holidays) {
+      [
+        Date.new(2021, 1, 1),
+        Date.new(2021, 12, 25),
+        Date.new(2021, 12, 31)
+      ]
+    }
+    let(:time_zone) { 'Etc/UTC' }
+
+    let(:config) {
+      proc do |c|
+        c.hours     = hours
+        c.shifts    = shifts
+        c.breaks    = breaks
+        c.holidays  = holidays
+        c.time_zone = time_zone
+      end
+    }
+    subject(:schedule) { Biz::Schedule.new(&config) }
+
+    describe '#periods' do
+      it 'returns periods for the schedule' do
+        expect(
+          schedule.periods.after(Time.utc(2021, 9, 22)).first
+        ).to eq(
+          Biz::TimeSegment.new(
+            Time.utc(2021, 9, 22, 10),
+            Time.utc(2021, 9, 22, 14)
+          )
+        )
+      end
+
+      it 'should return periods after the shift' do
+        expect(
+          schedule.periods.after(Time.utc(2021, 9, 23)).first
+        ).to eq(
+          Biz::TimeSegment.new(
+            Time.utc(2022, 1, 10, 10),
+            Time.utc(2022, 1, 10, 12)
+          )
+        )
+      end
+
+      it 'should account holidays' do
+        expect(
+          schedule.periods.after(Time.utc(2021, 12, 31)).first
+        ).to eq(
+          Biz::TimeSegment.new(
+            Time.utc(2022, 1, 7, 10),
+            Time.utc(2022, 1, 7, 14)
+          )
+        )
+      end
+    end
+  end
 end

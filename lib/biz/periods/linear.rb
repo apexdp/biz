@@ -23,16 +23,19 @@ module Biz
       def linear_periods
         Enumerator.new do |yielder|
           loop do
-            periods.next and next if periods.peek.date == shifts.peek.date
+            if periods.any?
+              periods.next and next if periods.peek.date == shifts.peek.date
+            end
 
             yielder << begin
               sequences
+                .select(&:any?)
                 .public_send(selector) { |sequence| sequence.peek.date }
                 .next
             end
           end
 
-          loop do yielder << periods.next end
+          loop do yielder << periods.next end if periods.any?
         end
       end
 

@@ -45,16 +45,6 @@ RSpec.describe Biz::Configuration do
     end
   end
 
-  context 'when initialized with an invalid configuration' do
-    it 'raises a configuration error' do
-      expect {
-        Biz::Configuration.new do |config|
-          config.hours = {}
-        end
-      }.to raise_error Biz::Error::Configuration
-    end
-  end
-
   context 'when converted to a proc for configuration' do
     let(:proc_configuration) { described_class.new(&configuration) }
 

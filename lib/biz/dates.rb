@@ -7,6 +7,7 @@ module Biz
       super(
         Clavius::Schedule.new do |c|
           c.weekdays = schedule.weekdays
+          c.included = schedule.shifts.map(&:date)
           c.excluded = schedule.holidays.map(&:to_date)
         end
       )

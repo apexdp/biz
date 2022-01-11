@@ -16,8 +16,7 @@ jobs:
         rvm:
           - 2.3
           - 2.4
-          - jruby-9.1
-          - jruby-head
+          - 2.5
     steps:
       - uses: zendesk/checkout@v2
       - uses: zendesk/setup-ruby@v1

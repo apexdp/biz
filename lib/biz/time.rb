@@ -73,11 +73,18 @@ module Biz
     end
 
     def local(time)
-      # time_zone.utc_to_local(time.utc)
-      # utc_total_offset = time_zone.period_for_utc(time).utc_total_offset
-      # time.getlocal(utc_total_offset)
-      local_time = time_zone.to_local(time.utc)
-      ::Time.utc(local_time.year, local_time.month, local_time.day, local_time.hour, local_time.min, local_time.sec)
+      local_time = time_zone.utc_to_local(time.utc)
+
+      # TZInfo before 2.x.x, this was needed as utc_to_local did not contained timezone info
+      # However, 2.x.x onwards it contains tz info. Hence, create utc time manually
+      ::Time.utc(
+        local_time.year,
+        local_time.month,
+        local_time.day,
+        local_time.hour,
+        local_time.min,
+        local_time.sec
+      )
     end
 
     def on_date(date, day_time)

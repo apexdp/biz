@@ -14,8 +14,6 @@ jobs:
       fail-fast: true
       matrix:
         rvm:
-          - 2.3
-          - 2.4
           - 2.5
     steps:
     - uses: zendesk/checkout@v2

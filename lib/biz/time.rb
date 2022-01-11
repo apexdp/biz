@@ -75,8 +75,9 @@ module Biz
     def local(time)
       local_time = time_zone.utc_to_local(time.utc)
 
-      # TZInfo before 2.x.x, this was needed as utc_to_local did not contained timezone info
-      # However, 2.x.x onwards it contains tz info. Hence, create utc time manually
+      # TZInfo before 2.x.x, this was needed as utc_to_local did not contained
+      # timezone info. However, 2.x.x onwards it contains tz info.
+      # Hence, create utc time manually.
       ::Time.utc(
         local_time.year,
         local_time.month,

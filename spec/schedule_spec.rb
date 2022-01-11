@@ -317,12 +317,30 @@ RSpec.describe Biz::Schedule do
     end
 
     describe '#dates' do
-      # TODO: Needs to be fixed
-      xit 'returns dates for the schedule' do
+      it 'returns dates for the schedule' do
         expect(schedule.dates.after(Date.new(2021, 12, 1)).take(3).to_a).to eq [
           Date.new(2021, 12, 3),
           Date.new(2021, 12, 17),
           Date.new(2022, 1, 7)
+        ]
+      end
+
+      it 'returns dates for for a mix schedule' do
+        schedule = Biz::Schedule.new do |config|
+          config.hours = {
+            wed: {'08:00' => '10:00'}
+          }
+          config.shifts = {
+            # alternate fridays
+            Date.new(2022, 1, 14) => {'10:00' => '14:00'},
+            Date.new(2022, 1, 28) => {'10:00' => '14:00'}
+          }
+        end
+
+        expect(schedule.dates.after(Date.new(2022, 1, 10)).take(3).to_a).to eq [
+          Date.new(2022, 1, 12),
+          Date.new(2022, 1, 14),
+          Date.new(2022, 1, 19)
         ]
       end
     end

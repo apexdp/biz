@@ -76,7 +76,7 @@ module Biz
       # time_zone.utc_to_local(time.utc)
       # utc_total_offset = time_zone.period_for_utc(time).utc_total_offset
       # time.getlocal(utc_total_offset)
-      time.utc.in_time_zone(@time_zone)
+      time_zone.to_local(time.utc)
     end
 
     def on_date(date, day_time)

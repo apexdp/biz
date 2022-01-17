@@ -28,10 +28,13 @@ module Biz
             end
 
             yielder << begin
-              sequences
+              selected = sequences
                 .select(&:any?)
                 .public_send(selector) { |sequence| sequence.peek.date }
-                .next
+
+              break if selected.nil?
+
+              selected.next
             end
           end
 

@@ -361,6 +361,17 @@ RSpec.describe Biz::Schedule do
           schedule.within(Time.utc(2021, 12, 3, 12), Time.utc(2021, 12, 3, 15))
         ).to eq Biz::Duration.hours(2)
       end
+
+      it 'should return 0 if empty shifts were provided' do
+        schedule = Biz::Schedule.new do |config|
+          config.hours  = {}
+          config.shifts = {}
+        end
+
+        expect(
+          schedule.within(Time.utc(2021, 12, 3, 12), Time.utc(2021, 12, 3, 15))
+        ).to eq Biz::Duration.hours(0)
+      end
     end
 
     describe '#in_hours?' do
